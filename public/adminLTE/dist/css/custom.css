@@ -1,0 +1,134 @@
+.vertical-middle {
+    vertical-align: middle !important;
+}
+.toast.fade.in {
+    z-index: 9999;
+    position: fixed;
+    right: 5px;
+    bottom: 0;
+}
+.toast {
+    opacity: 0;
+    z-index: -99;
+    min-width: 200px;
+}
+.required:after {
+    content: "*";
+    color: #fc6868;
+    font-weight: 700;
+    display: inline-block;
+}
+.box-thumbnail {
+    border: 1px solid #ececec;
+    padding: 1rem;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+.box-preview {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 10px 0;
+    position: relative;
+}
+.box-preview img{
+    margin: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 400px;
+}
+.box-preview .clear-img {
+    position: absolute;
+    display: none;
+    z-index: 9;
+    right: 0;
+    top: 0;
+    color: #fff;
+    background-color: rgba(0,0,0,0.6);
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+}
+.loading {
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+td .thumbnail {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: auto;
+}
+.loading.in {
+    display: flex;
+    position: fixed;
+    z-index: 9;
+}
+.mr-2 {
+    margin-right: .25rem;
+}
+.mb-2 {
+    margin-bottom: .25rem;
+}
+.overflow-y-auto {
+    overflow-y: auto;
+}
+.dataTable .label {
+    font-weight: 500;
+    font-size: 85%;
+}
+.dd-item .edit {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 10px;
+    top: 0;
+}
+.dd-item .delete {
+    position: absolute;
+    right: 13%;
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 10px;
+    top: 0;
+}
+.dd-item .edit-menu{
+    display: none;
+    z-index: 9;
+    margin-left: 2rem;
+}
+.filter-search {
+    margin-bottom: 2rem;
+}
+.pt-0 {
+    padding-top: 0 !important;
+}
+.pb-0 {
+    padding-bottom: 0 !important;
+}
+#dataTable .vip-member-img {
+    display: block;
+    margin: auto;
+    width: 40px;
+}
+
+.box-header .vip-member-img {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 35px;
+    height: auto;
+}

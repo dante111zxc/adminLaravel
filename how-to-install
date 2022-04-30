@@ -1,0 +1,24 @@
+system requirement:
+    - php version >= 7.4
+    - mysql
+    - apache or nginx (requires nginx)
+how to install
+    1. clone project from github
+    2. create data base
+    3. cd to path/folder-code and run composer update (if php version < 7.4, application will error)
+    4. copy .env-example and run command php artisan key:generate
+        4.1 install ckfinder by command php artisan ckfinder:download
+        4.2 make folder directory structure
+            storage
+                app
+                framework
+                    cache
+                    sessions
+                    views
+                logs
+
+    5. clear all cache and optimize by command
+        php artisan cache:clear
+        php artisan optimize
+
+
