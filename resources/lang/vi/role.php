@@ -23,6 +23,8 @@ return [
     'methodpayments' => 'Phương thức thanh toán',
     'order' => 'Đơn hàng',
     'transactionpcoin' => 'Lịch sử nạp Pcoin',
-    'reviews' => 'Bình luận'
+    'reviews' => 'Bình luận',
+    'coupon' => 'Mã giảm giá',
+    'coupontemplate' => 'Loại mã giảm giá'
 
 ];

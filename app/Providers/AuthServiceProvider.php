@@ -19,6 +19,8 @@ use App\Policies\MethodPaymentsPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\TransactionPcoinPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\CouponPolicy;
+use App\Policies\CouponTemplatePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -47,7 +49,9 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Orders' => 'App\Policies\OrderPolicy',
         'App\Models\User' => 'App\Policies\UserPolicy',
         'App\Models\TransactionPcoin' => 'App\Policies\TransactionPcoinPolicy',
-        'App\Models\Reviews' => 'App\Policies\ReviewsPolicy'
+        'App\Models\Reviews' => 'App\Policies\ReviewsPolicy',
+        'App\Models\Coupon' => ' App\Policies\CouponPolicy;',
+        'App\Models\CouponTemplate' => ' App\Policies\CouponTemplatePolicy;',
     ];
 
     /**
@@ -156,6 +160,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('reviews.edit', ReviewsPolicy::class . '@edit');
         Gate::define('reviews.delete', ReviewsPolicy::class . '@delete');
 
+        Gate::define('coupon.view', CouponPolicy::class . '@view');
+        Gate::define('coupon.create', CouponPolicy::class . '@create');
+        Gate::define('coupon.edit', CouponPolicy::class . '@edit');
+        Gate::define('coupon.delete', CouponPolicy::class . '@delete');
+
+        Gate::define('coupontemplate.view', CouponTemplatePolicy::class . '@view');
+        Gate::define('coupontemplate.create', CouponTemplatePolicy::class . '@create');
+        Gate::define('coupontemplate.edit', CouponTemplatePolicy::class . '@edit');
+        Gate::define('coupontemplate.delete', CouponTemplatePolicy::class . '@delete');
 
     }
 

@@ -158,7 +158,29 @@
                             <a href="{{ route('transaction-pcoin.index') }}"><i class="fa fa-circle-o"></i> Lịch sử nạp Pcoin</a>
                         </li>
                     @endcan
+                </ul>
+            </li>
 
+            <li class="treeview">
+                <a href="javascript:void (0)">
+                    <i class="fa fa-gift"></i> <span> Mã giảm giá</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    @can('coupontemplate.view')
+                        <li>
+                            <a href="{{ route('coupon-template.index') }}"><i class="fa fa-circle-o"></i> Loại mã giảm giá</a>
+                        </li>
+                    @endcan
+
+
+                    @can('coupon.view')
+                        <li>
+                            <a href="{{ route('coupon.index') }}"><i class="fa fa-circle-o"></i>Mã giảm giá</a>
+                        </li>
+                    @endcan
                 </ul>
 
             </li>

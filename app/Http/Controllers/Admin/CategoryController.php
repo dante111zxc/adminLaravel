@@ -22,9 +22,11 @@ class CategoryController extends Controller
     {
         return  view("admin.category.index");
     }
+
     public function dataTable(){
         return Category::buildDataTable();
     }
+
     public function create()
     {
         $taxonomies = Category::query()->whereNull('parent_id')->orderBy('id', 'desc')->get();

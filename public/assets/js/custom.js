@@ -646,6 +646,7 @@ const minusQty = function (thisElement, elementParent, update){
 
     let input = minus.closest($(elementParent)).find('input');
     let qty = input.val();
+    let rowId = $(thisElement).closest('.cart-item').attr('data-row-id');
 
     if (qty == 1) {
         alert ('Số lượng nhỏ nhất là 1');
@@ -663,18 +664,23 @@ const minusQty = function (thisElement, elementParent, update){
             data: {
                 _token:  $(document).find('meta[name="csrf-token"]').attr('content'),
                 id: $(thisElement).attr('data-id'),
-                qty: qty
+                qty: qty,
+                row_id: rowId
             },
             beforeSend: function () {
                 $('.overlay').addClass('show');
                 $(thisElement).prop('disable', true);
             },
             success: function (res) {
-                $(thisElement).prop('disable', false);
-                $('.overlay').removeClass('show');
                 if (res.code === 200) {
-                    $('.cart-total  .total').html(res.cart_total);
-                    $('.cart-subtotal').html(res.cart_total);
+                    $('.cart-subtotal-text').html(res.cart_sub_total);
+                    $('.cart-total-text').html(res.cart_total);
+                    $('input[name="cart_total"]').val(res.cart_total.replace('.', ''));
+
+                    /**update mini cart**/
+                    $('.mini-cart-sub-total').html(res.cart_sub_total + '<sup>đ</sup>');
+                    $('.mini-cart-total').html(res.cart_total + '<sup>đ</sup>');
+
                     $('.cart-qty').html(res.cart_count);
                 }
                 $.toast({
@@ -684,6 +690,10 @@ const minusQty = function (thisElement, elementParent, update){
                     type: res.type,
                     delay: 1500
                 });
+            },
+            complete: function () {
+                $(thisElement).prop('disable', false);
+                $('.overlay').removeClass('show');
             }
         })
     }
@@ -697,6 +707,7 @@ const plusQty = function (thisElement, elementParent, update) {
 
     let input = plus.closest($(elementParent)).find('input');
     let qty = input.val();
+    let rowId = $(thisElement).closest('.cart-item').attr('data-row-id');
     input.val(parseInt(qty) + 1);
     input.attr('value', parseInt(qty) + 1);
     qty = input.val();
@@ -709,18 +720,22 @@ const plusQty = function (thisElement, elementParent, update) {
             data: {
                 _token:  $(document).find('meta[name="csrf-token"]').attr('content'),
                 id: $(thisElement).attr('data-id'),
-                qty: qty
+                qty: qty,
+                row_id: rowId
             },
             beforeSend: function () {
                 $('.overlay').addClass('show');
                 $(thisElement).prop('disable', true);
             },
             success: function (res) {
-                $(thisElement).prop('disable', false);
-                $('.overlay').removeClass('show');
                 if (res.code === 200) {
-                    $('.cart-total  .total').html(res.cart_total);
-                    $('.cart-subtotal').html(res.cart_total);
+                    $('.cart-subtotal-text').html(res.cart_sub_total);
+                    $('.cart-total-text').html(res.cart_total);
+                    $('input[name="cart_total"]').val(res.cart_total.replace('.', ''));
+
+                    /**update mini cart**/
+                    $('.mini-cart-sub-total').html(res.cart_sub_total + '<sup>đ</sup>');
+                    $('.mini-cart-total').html(res.cart_total + '<sup>đ</sup>');
                     $('.cart-qty').html(res.cart_count);
                 }
                 $.toast({
@@ -730,6 +745,10 @@ const plusQty = function (thisElement, elementParent, update) {
                     type: res.type,
                     delay: 1500
                 });
+            },
+            complete: function () {
+                $(thisElement).prop('disable', false);
+                $('.overlay').removeClass('show');
             }
         })
     }

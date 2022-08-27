@@ -22,7 +22,12 @@
     <meta name="twitter:image" content="{{ !empty($dataSeo['logo']) ? getThumbnail($dataSeo['logo']): '' }}">
     <meta name="twitter:site" content="@paimonshop">
     <meta name="twitter:creator" content="@paimonshop">
+    @if(env('APP_ENV') === 'development')
+    <meta name="robots" content="noindex, nofollow">
+        @else
     <meta name="robots" content="{{ !empty($dataSeo['robots']) ? $dataSeo['robots'] : 'noindex, nofollow' }}">
+    @endif
+
     <link rel="canonical" href="{{ url()->current() }}">
     <script>
         var homeUrl = '{{ url('/') }}';
@@ -44,32 +49,34 @@
 {{--    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v12.0&appId=366654317181054&autoLogAppEvents=1" nonce="gqlSpKW7"></script>--}}
 </head>
 <body>
-    <!-- Messenger Plugin chat Code -->
-    <div id="fb-root"></div>
+    @if(env('APP_ENV') !== 'development')
+        <!-- Messenger Plugin chat Code -->
+        <div id="fb-root"></div>
 
-    <!-- Your Plugin chat code -->
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
-    <script>
-        var chatbox = document.getElementById('fb-customer-chat');
-        chatbox.setAttribute("page_id", "102221568248663");
-        chatbox.setAttribute("attribution", "biz_inbox");
+        <!-- Your Plugin chat code -->
+        <div id="fb-customer-chat" class="fb-customerchat">
+        </div>
+        <script>
+            var chatbox = document.getElementById('fb-customer-chat');
+            chatbox.setAttribute("page_id", "102221568248663");
+            chatbox.setAttribute("attribution", "biz_inbox");
 
-        window.fbAsyncInit = function() {
-            FB.init({
-                xfbml            : true,
-                version          : 'v12.0'
-            });
-        };
+            window.fbAsyncInit = function() {
+                FB.init({
+                    xfbml            : true,
+                    version          : 'v12.0'
+                });
+            };
 
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+    @endif
 
     <header>
         <div class="container">

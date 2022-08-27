@@ -4,10 +4,10 @@ namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
 use App\Mail\Order;
-use App\Models\MethodPayments;
 use App\Models\Orders;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +62,7 @@ class OrderController extends Controller
        }
 
     }
+
     public function deleteItemFromCart (Request $request) {
        if ($request->ajax() && $request->isMethod('delete')) {
            $rowId = $request->input('rowId');
@@ -86,25 +87,25 @@ class OrderController extends Controller
            }
        }
     }
+
     public function updateQty (Request $request){
        if ($request->ajax() && $request->isMethod('post')) {
-            $id = $request->input('id');
             $qty = $request->input('qty');
-            $cart_content = Cart::content();
-            foreach ($cart_content as $key => $item) {
-                if ($item->id == $id) {
-                    $rowId = $key;
-                    break;
-                }
-            }
+            $rowId = $request->input('row_id');
 
             if (!empty($rowId)) {
                 Cart::update($rowId, $qty);
+                $cartTotal = numberFormat( getTotalCartWithSale(Auth::user()->id),0, ',', '.');
+                if (empty($cartTotal)) {
+                    $cartTotal = Cart::total();
+                }
+
                 return response()->json([
                     'type' => 'success',
                     'code' => 200,
                     'message' => 'Cập nhật giỏ hàng thành công',
-                    'cart_total' => Cart::subtotal(),
+                    'cart_sub_total' => Cart::subTotal(),
+                    'cart_total' => $cartTotal,
                     'cart_count' => Cart::count()
                 ]);
             }
@@ -116,23 +117,23 @@ class OrderController extends Controller
            ]);
        }
     }
+
     public function showCart () {
         if (!$cartTotal = numberFormat( getTotalCartWithSale(Auth::user()->id),0, ',', '.')) {
            $cartTotal = Cart::total();
         }
         return view('public.cart.index', compact('cartTotal'));
     }
+
     public function checkOut (){
-        $methodPayments = MethodPayments::query()->where([
-           'status' => 1
-        ])->get();
         if (!$cartTotal = numberFormat( getTotalCartWithSale(Auth::user()->id),0, ',', '.')) {
            $cartTotal = Cart::total();
         }
 
         if (!Cart::count()) return redirect()->route('home');
-        return view('public.cart.checkout', compact('methodPayments', 'cartTotal'));
+        return view('public.cart.checkout', compact( 'cartTotal'));
     }
+
     public function quickBuy ($id){
        $product = Product::query()->find($id);
        if (!empty($product->stock)) {
@@ -150,32 +151,37 @@ class OrderController extends Controller
            return redirect()->back();
        }
     }
+
     public function orderDetail ($id){
-       $order = Orders::query()->findOrFail($id);
+       $order = Orders::query()->with('products')->findOrFail($id);
        if (Auth::user()->id !== $order->user_id) {
-           return redirect()->route('home');
+          return abort(401);
        } else {
            $orderStatus = Orders::STATUS[$order->status];
            $methodPayment = Orders::METHODS_PAYMENT[$order->method_payment];
-           $cart = Orders::orderDetail($order->id);
-           return view('public.cart.order-detail', compact('order', 'orderStatus', 'methodPayment', 'cart'));
+           return view('public.cart.order-detail', compact('order', 'orderStatus', 'methodPayment'));
        }
     }
+
     public function submitCheckout (Request $request){
        try {
            $validator = Validator::make($request->all(), [
-               'name' => 'required',
+               'name' => 'required|string',
                'phone' => 'required',
-               'address' => 'required',
+               'address' => 'required|string',
                'email' => 'required|email',
-               'method_payment' => 'required',
-               'cart_total' => 'required'
+               'method_payment' => 'required|integer',
+               'cart_total' => 'required|integer'
            ],[
                'name.required' => 'Tên không được bỏ trống',
                'phone.required' => 'Số điện thoại không được bỏ trống',
                'address.required' => 'Địa chỉ không được bỏ trống',
                'email.required' => 'Email không được bỏ trống',
-               'method_payment.required' => 'Chưa chọn phương thức thanh toán'
+               'method_payment.required' => 'Chưa chọn phương thức thanh toán',
+               'cart_total.integer' => 'Tổng tiền đơn hàng phải là 1 số',
+               'method_payment.integer' => 'Phương thức thanh toán không hợp lệ',
+               'address.string' => 'Địa chỉ không hợp lệ',
+               'name.string' => 'Họ và tên không hợp lệ'
            ]);
            $cartTotal = $request->input('cart_total');
            if ($validator->fails()) {
@@ -184,14 +190,10 @@ class OrderController extends Controller
 
            //check xem co phai vip member k
            $isVipMember = 0;
-           $vipMember = str_replace('%', '', getSalePercentByUserId(Auth::user()->id));
-           if ($vipMember != 0) {
+           $memberSalePercent = str_replace('%', '', getSalePercentByUserId(Auth::user()->id));
+           if ($memberSalePercent != 0) {
                $isVipMember = 1;
            }
-
-//           if ($request->input('method_payment') != 2) {
-//               return redirect()->back()->withErrors(['message' => 'Có lỗi xảy ra. Vui lòng thử lại sau'])->withInput();
-//           }
 
            //check giá trị đơn hàng phải lớn hơn 0 mới cho đặt hàng
            if (!$cartTotal) return redirect()->back()->withErrors(['message' => 'Giá trị đơn hàng phải lớn hơn 0'])->withInput();
@@ -204,8 +206,6 @@ class OrderController extends Controller
                return redirect()->back()->withErrors(['messages' => 'Số Pcoin không đủ'])->withInput();
            }
 
-
-
            $acc_info = array_filter(array_map('array_filter', $request->input('acc_info')));
            $order = Orders::query()->create([
                'name' => $request->input('name'),
@@ -217,8 +217,11 @@ class OrderController extends Controller
                'acc_info' => json_encode($acc_info),
                'method_payment' => $request->input('method_payment'),
                'subtotal' => getCartTotal(Cart::subtotal()),
+               'member_sale_percent' => $memberSalePercent,
                'total' =>$cartTotal,
                'status' => 0,
+               'is_coupon' => $request->is_coupon,
+               'coupon_code_id' => $request->input('coupon_code_id'),
                'is_vip_member' => $isVipMember
            ]);
 
@@ -239,15 +242,26 @@ class OrderController extends Controller
                        ->send(new Order($order, Cart::content(), $cartTotal));
                }
            }
-
-           $cart = Cart::content();
-           $orderStatus = Orders::STATUS[$order->status];
-           $methodPayment = Orders::METHODS_PAYMENT[$order->method_payment];
-           return view('public.cart.checkout-success', compact('order', 'cart', 'orderStatus', 'methodPayment', 'cartTotal'));
+           return redirect()->route('checkout_success', $order->id);
        } catch (\Exception $exception) {
            return redirect()->back()->withErrors(['message' => 'Có lỗi xảy ra'])->withInput();
        }
     }
+
+    public function checkoutSuccess($id){
+        (Cart::destroy());
+        $order = Orders::query()->with('products')->findOrFail($id);
+        $userId = Auth::user()->id;
+        if ($userId !== $order->user_id) {
+            return abort(401);
+        }
+
+        $orderStatus = Orders::STATUS[$order->status];
+        $methodPayment = Orders::METHODS_PAYMENT[$order->method_payment];
+
+        return view('public.cart.checkout-success', compact('order', 'orderStatus', 'methodPayment'));
+    }
+
     protected function updatePcoin ($userId, $pcoin){
         $user = User::query()->find($userId);
         return $user->fill([

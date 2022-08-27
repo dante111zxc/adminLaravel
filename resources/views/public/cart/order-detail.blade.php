@@ -23,8 +23,8 @@
             <div class="col-12 col-md-4">
                 <div class="bill">
                     <h2 class="bill-title">Chi tiết đơn hàng</h2>
-                    @if(!empty($cart))
-                        @foreach($cart as $key => $item)
+                    @if(!empty($order->products))
+                        @foreach($order->products as $key => $item)
                             <div class="bill-product-item">
                                 <div class="thumbnail">
                                     <a href="{{ route('product', ['id' => $item->id, 'slug' => $item->slug]) }}">
@@ -36,7 +36,7 @@
                                         {{ $item->title }}
                                     </a>
                                     <div class="price">
-                                        {{ $item->qty }} x {!! showMoney($item->price) !!}
+                                        {{ $item->pivot->qty }} x {!! showMoney($item->pivot->price) !!}
                                     </div>
                                 </div>
                             </div>
