@@ -32,6 +32,7 @@ class Orders extends Model
         'email_has_send',
         'status',
         'is_vip_member',
+        'member_sale_percent',
         'is_coupon',
         'coupon_id'
     ];
@@ -64,12 +65,17 @@ class Orders extends Model
         4 => 'Thanh toán bằng QR VNPAY'
     ];
 
-    public static function  orderDetail ($order_id){
-        $model = DB::table('order_detail')
-            ->join('products', 'products.id', 'product_id')
-            ->where('order_id', $order_id);
-        return $model->get();
+    public function products (){
+        return $this->belongsToMany(Product::class, 'order_detail', 'order_id', 'product_id')->withPivot(['name', 'qty', 'price']);
     }
+
+//    public static function  orderDetail ($order_id){
+//
+//        $model = DB::table('order_detail')
+//            ->join('products', 'products.id', 'product_id')
+//            ->where('order_id', $order_id);
+//        return $model->get();
+//    }
 
     public static function getTotalOrderAmountByUserId($userId){
         return Orders::query()->where([

@@ -18,6 +18,8 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TransactionPcoinController;
 use App\Http\Controllers\Admin\ReviewsController;
+use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\CouponTemplateController;
 
 Route::get('/', 'App\Http\Controllers\Auth\AdminLoginController@dashboard')->name('admin.dashboard')->middleware('auth:admin');
 Route::get('/login', 'App\Http\Controllers\Auth\AdminLoginController@showLoginForm')->name('admin.login');
@@ -65,6 +67,13 @@ Route::middleware('auth:admin')->group(function (){
 
     Route::resource('product-attributes', ProductAttributesController::class)->except(['show']);
     Route::get('product-attributes/dataTable', 'App\Http\Controllers\Admin\ProductAttributesController@dataTable')->name('product-attributes.data_table');
+
+    Route::resource('coupon', CouponController::class)->except(['show']);
+    Route::get('coupon/dataTable', 'App\Http\Controllers\Admin\CouponController@dataTable')->name('coupon.data_table');
+
+    Route::resource('coupon-template', CouponTemplateController::class)->except(['show']);
+    Route::get('coupon-template/dataTable', 'App\Http\Controllers\Admin\CouponTemplateController@dataTable')->name('coupon-template.data_table');
+
 
     //Danh sách các thuộc tính của 1 loại thuộc tính
     Route::get('product-attributes/{id}/attributes/index', 'App\Http\Controllers\Admin\ProductAttributesController@attributesIndex')->name('attributes_index');

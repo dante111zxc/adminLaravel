@@ -30,18 +30,18 @@
 
 <div class="cart-total {{(Cart::content()->count()) == 0 ? 'd-none' : ''}}">
     <div class="text">Tổng phụ</div>
-    <div class="total">{!!  showMoney(Cart::subtotal()) !!}</div>
+    <div class="mini-cart-sub-total">{!!  showMoney(Cart::subtotal()) !!}</div>
 </div>
 
 @if(\Illuminate\Support\Facades\Auth::user())
 <div class="cart-total {{(Cart::content()->count()) == 0 ? 'd-none' : ''}}">
     <div class="text">Giảm giá Vip Member</div>
-    <div class="total">{{ getSalePercentByUserId(\Illuminate\Support\Facades\Auth::user()->id) }}</div>
+    <div class="mini-cart-sale-percent">{{ getSalePercentByUserId(\Illuminate\Support\Facades\Auth::user()->id) }}</div>
 </div>
 
 <div class="cart-total {{(Cart::content()->count()) == 0 ? 'd-none' : ''}}">
     <div class="text">Tổng tiền</div>
-    <div class="total">{!! showMoney(getTotalCartWithSale(\Illuminate\Support\Facades\Auth::user()->id)) !!}</div>
+    <div class="mini-cart-total">{!! showMoney(getTotalCartWithSale(\Illuminate\Support\Facades\Auth::user()->id)) !!}</div>
 </div>
 @endif
 <div class="cart-button {{(Cart::content()->count()) == 0 ? 'd-none' : ''}}">

@@ -75,6 +75,7 @@ class Category extends Model
     {
         return $this->parent()->with('parentRecursive');
     }
+
     public static function buildDataTable (){
         $taxonomy = Category::query();
         $dataTable = new DataTables();

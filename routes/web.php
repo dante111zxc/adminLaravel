@@ -58,6 +58,7 @@ Route::delete('/delete-item-from-cart', 'App\Http\Controllers\FrontEnd\OrderCont
 Route::get('/xac-nhan-thanh-toan', 'App\Http\Controllers\FrontEnd\OrderController@showCart')->name('show_cart');
 Route::get('/thanh-toan', 'App\Http\Controllers\FrontEnd\OrderController@checkOut')->name('check_out');
 Route::post('/thanh-toan', 'App\Http\Controllers\FrontEnd\OrderController@submitCheckout')->name('submit_checkout');
+Route::get('/thanh-toan-thanh-cong/{id}', 'App\Http\Controllers\FrontEnd\OrderController@checkoutSuccess')->name('checkout_success');
 Route::get('/chi-tiet-don-hang/{id}', 'App\Http\Controllers\FrontEnd\OrderController@orderDetail')->name('order_detail')->middleware(['auth', 'verified']);
 Route::post('/update-qty', 'App\Http\Controllers\FrontEnd\OrderController@updateQty')->name('update_qty');
 

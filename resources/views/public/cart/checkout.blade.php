@@ -26,16 +26,10 @@
             <div class="col-12 col-lg-8">
                 <form class="form-checkout" id="form-checkout" action="{{ route('submit_checkout') }}" method="POST">
                     @csrf
-
-                    @php
-                        if ((Auth::check() == true) && Auth::user()->pcoin >= getCartTotal(Cart::subtotal())) {
-                            $method_payment = 2;
-                        } else {
-                            $method_payment = 1;
-                        }
-                    @endphp
                     <input type="hidden" name="cart_total" value="{{ getCartTotal($cartTotal) }}">
-                    <input type="hidden" name="method_payment" value="{{ $method_payment }}">
+                    <input type="hidden" name="method_payment" value="2">
+                    <input type="hidden" name="is_coupon" value="0">
+                    <input type="hidden" name="coupon_code_id">
                     <div class="checkout-info">
                         <div class="form-row">
                             <div class="form-group col-12 col-md-6">
@@ -197,20 +191,21 @@
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <div class="font-weight-bold">Tổng phụ</div>
-                            <div class="font-weight-bold"><span
-                                    class="cart-subtotal">{!! showMoney(Cart::subtotal()) !!}</span></div>
+                            <div class="font-weight-bold">
+                                <span class="cart-subtotal-text">{!! showMoney(Cart::subtotal()) !!}</span>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <div class="font-weight-bold">Giảm giá Vip Member</div>
                             <div class="font-weight-bold">
-                                <span class="cart-subtotal">{{ getSalePercentByUserId(\Illuminate\Support\Facades\Auth::user()->id) }}</span>
+                                <span class="member-sale-percent">{{ getSalePercentByUserId(\Illuminate\Support\Facades\Auth::user()->id) }}</span>
                             </div>
                         </div>
                         <hr class="border-white mb-5">
                         <div class="d-flex justify-content-between mb-3">
                             <div class="font-weight-bold">Tổng</div>
                             <div class="font-weight-bold">
-                                <span class="cart-subtotal">{!! showMoney($cartTotal) !!}</span></div>
+                                <span class="cart-total-text">{!! showMoney($cartTotal) !!}</span></div>
                         </div>
                         @if (Auth::user()->pcoin >= getCartTotal($cartTotal))
                             <a class="btn-block btn-checkout font-weight-bold" id="btnCheckOut" href="javascript:void(0)">Thanh toán</a>

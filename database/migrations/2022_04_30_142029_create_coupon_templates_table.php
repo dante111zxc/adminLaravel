@@ -18,7 +18,7 @@ class CreateCouponTemplatesTable extends Migration
             $table->string('title');
             $table->string('description')->nullable();
             $table->tinyInteger('type')->default(1);
-            $table->decimal('discount');
+            $table->integer('discount');
             $table->timestamps();
         });
     }
