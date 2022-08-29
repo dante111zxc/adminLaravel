@@ -49,14 +49,14 @@ $config['privateDir'] = array(
 // http://docs.cksource.com/ckfinder3-php/configuration.html#configuration_options_images
 
 $config['images'] = array(
-    'maxWidth'  => 1600,
-    'maxHeight' => 1200,
-    'quality'   => 80,
-    'sizes' => array(
-        'small'  => array('width' => 480, 'height' => 320, 'quality' => 80),
-        'medium' => array('width' => 600, 'height' => 480, 'quality' => 80),
-        'large'  => array('width' => 800, 'height' => 600, 'quality' => 80)
-    )
+    'maxWidth'  => 4000,
+    'maxHeight' => 4000,
+    'quality'   => 100,
+//    'sizes' => array(
+//        'small'  => array('width' => 480, 'height' => 320, 'quality' => 80),
+//        'medium' => array('width' => 600, 'height' => 480, 'quality' => 80),
+//        'large'  => array('width' => 800, 'height' => 600, 'quality' => 80)
+//    )
 );
 
 $config['thumbnails'] = array(
@@ -137,8 +137,8 @@ $config['accessControl'][] = array(
     'FILE_RENAME'         => true,
     'FILE_DELETE'         => true,
 
-    'IMAGE_RESIZE'        => true,
-    'IMAGE_RESIZE_CUSTOM' => true
+    'IMAGE_RESIZE'        => false,
+    'IMAGE_RESIZE_CUSTOM' => false
 );
 
 
@@ -147,7 +147,7 @@ $config['accessControl'][] = array(
 
 $config['overwriteOnUpload'] = false;
 $config['checkDoubleExtension'] = true;
-$config['disallowUnsafeCharacters'] = false;
+$config['disallowUnsafeCharacters'] = true;
 $config['secureImageUploads'] = true;
 $config['checkSizeAfterScaling'] = true;
 $config['htmlExtensions'] = array('html', 'htm', 'xml', 'js');
@@ -157,7 +157,7 @@ $config['forceAscii'] = false;
 $config['xSendfile'] = false;
 
 // http://docs.cksource.com/ckfinder3-php/configuration.html#configuration_options_debug
-$config['debug'] = true;
+$config['debug'] = false;
 
 /*==================================== Plugins ========================================*/
 // http://docs.cksource.com/ckfinder3-php/configuration.html#configuration_options_plugins
